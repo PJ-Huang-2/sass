@@ -1,0 +1,628 @@
+// /*css 註解*/ 
+// // $fontSize : 16px; // 數值 
+// // $color : #333; // 顏色
+// // $bgc : #fff;   // 背景色
+// // $fontFamily : '微軟正黑體'; // 字串
+// // $margin : 10px 20px 5px 4px; // list
+// // $null : null; //空值
+// // $w : false; // 用在判斷式
+
+/*css 註解*/
+
+// scss 外部檔案
+//變數
+@import 'base/font';
+@import 'base/color';
+@import 'base/common';
+
+// mixin
+@import 'mixin/mixin';
+
+// component
+@import 'components/btn';
+@import 'components/grid';
+
+
+// layout 
+@import 'layout/header';
+@import 'layout/footer';
+@import 'layout/login';
+@import 'layout/nav';
+
+// css => @import url();
+
+
+body {
+    margin: $margin;
+    padding: 0;
+    font-size: $fontSize;
+    color: $color;
+    background-color: $bgc;
+    font-family: $fontFamily;
+    border: $null;
+}
+
+.wrapper {
+    @if $w {
+        width: 100%;
+    }
+
+    @else {
+        width: 1200px;
+        margin: 0 auto;
+    }
+}
+
+
+
+// .b {
+//     //$b : 10px !global; // 轉成全域變數
+//     //margin: $b;
+// }
+
+// div {
+//     margin: $b;
+// }
+
+// 改變權重 !default
+$a : 20px;
+$a : 30px !default; //預設值
+
+
+.a {
+    font-size: $a;
+}
+
+//======  轉型字串  ==========
+$url : icon1; //url
+
+.icon {
+    background-image: url('#{$url}.jpg');
+}
+
+// class / 屬性
+$class : 'bottom';
+
+.#{$class} {
+    margin-#{$class}: 10px;
+}
+
+.wrapper {
+    width: 100%;
+    background-color: rgb(0, 110, 255);
+    h1 {
+      font-size: 36px;
+
+    }
+    nav {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        .logo {
+          width: 150px;
+          height: 50px;
+          background-color: #666;  
+        }
+
+        ul {
+            list-style: none;
+            display: flex;
+
+            li {
+                padding: 10px 20px;
+                background-color: rgb(247, 0, 255);
+
+                //偽元素
+                a {
+                   color : rgb(222, 0, 0);
+                    &:first-child {
+                    color : rgb(157, 255, 0);
+                     &:hover {
+                        color : rgb(0, 217, 255);
+                     }
+                   }
+                   &:hover {
+                     color:rgb(71, 0, 0)
+                   }
+                   &::after {
+                    content: '';
+                   }
+                   &::before {
+                      content: '';
+                   }
+                }
+
+            }
+        }
+    }
+}
+// 運算
+
+.box {
+  width:  10px + 10;
+  height:  100px - 20px;
+  margin: 10 * 10 + px;
+  //font : calc(20 / 5) + px; //除法要特別注意 
+}
+
+$w : 1200;
+
+.wrapper-full {
+  @if $w == 100 {
+    width: 100vw;
+  }@else if $w == 1200 {
+    width: 1200px;
+    margin: 0 auto;
+  }
+}
+
+
+.btn {
+    $outline : true;
+    $outline_bgc : #e2e2e2;
+
+    padding: 10px 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: .3s all ease;
+    @if $outline{
+        border: 1px solid #333;
+        background-color: $outline_bgc;
+        &:hover {
+            background-color: darken($outline_bgc  , 60); //sass顏色函式 
+        }
+    }@else {
+        background-color: #333;
+        color: #fff;
+        &:hover {
+            background-color: rgb(19, 19, 19);  
+        }  
+    }
+}
+
+// mixin 
+$w : 1400px;
+
+
+
+//不好寫法
+// @mixin boxcenter($w , $top ,$borderColo ,$borderRadius ){
+//     width: $w; 
+//     margin: $top auto 0;
+//     border: 1px solid $borderColor;
+//     border-radius: $borderRadius;
+//  }
+
+
+
+
+.box-1 {
+ @include boxcenter(200px);
+ @include m(){
+   width: 100%;
+ }
+ background-color: #eee;
+ height: 100px;
+}
+
+.box-2 {
+  @include boxcenter(136px);
+  @include m(){
+    @include boxcenter(100%);
+  }
+  background-color: #f20;
+  height: 100px;
+}
+
+.box-3 {
+  @include border(#f20,  50%){
+    color:rgb(0, 110, 255);
+    background-color: rgb(255, 84, 84);
+  };
+  width:100px;
+  height: 100px;
+  margin: 0 auto;
+}
+
+
+
+
+
+.wrapper {
+    @include layout(1200);
+    @include m(){
+        @include layout(full);
+    }
+}
+
+
+//迴圈
+
+// @for $i from 1 through 10 {
+//  .box-#{$i} {
+//     width: $i * 1px;
+//  }
+// }
+
+@mixin push($num){
+    @for $i from 1 through $num {
+        .push-#{$i} {
+          position: relative;
+          left: $i * 1px
+        }
+      }
+}
+
+
+// @include push(100);
+
+// @each
+
+$img : (
+    'key' : value1,
+    'key2': value2
+); //map
+
+.box-img {
+    content: map-get($img, key);
+}
+
+$images: img1 img2 img3 img4;
+
+@each $i in $images {
+
+    .img_#{$i} {
+        background-image: url('images/#{$i}.jpg');
+        // background-attachment: fixed;
+        // background-position: center;
+        // background-repeat: no-repeat;
+        // width: 100%;
+    }
+
+} 
+
+$title : (
+    'h1': 40px,
+    'h2': 30px,
+    'h3': 25px,
+    'span': 16px,
+    '*': 14px
+); //map
+
+@mixin title($title, $color:null){
+    @each $k , $v in $title {
+    #{$k} { //key放在class上面
+        font-size: $v;
+        color: $color;
+    }
+}
+
+}
+
+@include title($title, #fa9);
+
+// 顏色
+
+
+// "primary":    $primary,
+// "secondary":  $secondary,
+// "success":    $success,
+// "info":       $info,
+// "warning":    $warning,
+// "danger":     $danger,
+// "light":      $light,
+// "dark":       $dark
+
+
+$color : (
+    "primary": #ff7300,
+    "secondary": #0ed7ff,
+    "success": #00fc00,
+    "info" : #e4e4e4
+);
+
+@each $k , $v in $color {
+    .text-#{$k} {
+        color: $v;
+    }
+    .bg-#{$k} {
+        background-color: $v;
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// // scss 外部檔案
+// //變數
+// @import 'base/font';
+// @import 'base/color';
+// @import 'base/common';
+
+// // mixin
+// @import 'mixin/mixin';
+
+// // component
+// @import 'components/btn';
+// @import 'components/grid';   
+
+
+// // layout  
+// @import 'layout/header';
+// @import 'layout/footer';
+// @import 'layout/login';
+// @import 'layout/nav';
+
+// // css => @import url();
+
+// body {
+//     margin: $margin;
+//     padding: 0;
+//     font-size: $fontSize;
+//     color: $color;
+//     background-color: $bgc;
+//     font-family: $fontFamily;
+//     border: $null;
+// }
+
+
+
+// .wrapper {  
+//     @if $w {
+//         width: 100%;
+//     }
+
+//     @else {
+//         width: 1200px;
+//         margin: 0 auto;
+//     }
+// }
+
+// // .b {
+// //     $b : 10px !global; //轉成全域變數
+// //     margin : $b;
+// // }
+
+// // div {
+// //     margin: $b;
+// // }
+
+// // 改變權重 !default
+
+// $a : 20px;
+// $a : 30px !default; //預設值
+
+// .a {
+//     font-size: $a;
+// }
+
+// //轉型字串
+// $url : icon1;
+// .icon {
+//     background-image: url('#{$url}.jpg');
+// }
+// // class / 屬性
+// $class : 'bottom'; //外面是class裡面是屬性
+
+// .#{$class} {
+//     margin-#{$class}: 10px;
+// }
+
+// .wrapper {
+//     width: 100%;
+//     background-color: bisque;
+//     h1 {
+//         font-size: 30px; //全域
+//     }
+//     nav {
+//         width: 1200px;
+//         margin: 0 auto;
+//         display: flex;
+//         justify-content: space-between;
+//         align-items: center;
+//         .logo {
+//             width: 150px;
+//             height: 50px;
+//             background-color: #666;
+
+//         }
+//         ul {
+//             list-style: none;
+//             display: flex;
+//             li {
+//                 padding: 10px 20px;
+//                 background-color: rgb(247, 0, 255);
+//                 // 偽元素
+//                 &:nth-child(1){
+//                     background-color: aquamarine;
+//                     a {
+//                         color: darkolivegreen;
+//                         &:hover {
+//                             color: #333;
+//                         }
+//                     }
+//                 }
+               
+//                 a {
+//                     color: maroon;
+//                     &:hover {
+//                         color: salmon;
+//                     }
+                
+//                     &::after {
+//                         content: '';
+//                     }
+//                     &::before {
+//                         content: '';
+//                     }
+//                 }
+
+//                 // a:hover {}
+//             }
+//         }
+//     }
+// }
+
+// //運算
+
+// .box {
+//     width: 10px + 10px;
+//     height: 100px;
+//     margin: 10 * 10 (+ px) ; //px前面要+號
+//     // font: calc( 20 / 5 ) +px;
+// }
+
+// $w: 1200;
+
+// .wrapper-full {
+//     @if $w == 100 {
+//         width: 100vw;
+//     }@else if $w ==1200 {
+//         width: 1200px;
+//         margin: 0 auto;
+//     }
+// }
+
+// .btn {
+//     $outline : true;
+//     $outline_bgc :#e2e2e2;
+
+//     padding: 10px 20px;
+//     text-align: center;
+//     cursor: pointer;
+//     transition: .3s all ease;
+//     @if $outline{
+//         border: 1px solid #333;
+//         background-color: $outline_bgc;
+//         &:hover {
+//             background-color: darken($outline_bgc  , 60); //sass顏色函式 
+//         }
+//     }@else {
+//         background-color: #333;
+//         color: #fff;
+//         &:hover {
+//             background-color: rgb(19, 19, 19);  
+//         }  
+//     }
+// }
+
+// // mixin
+// $w: 1400px;
+
+
+// /* 不好寫法
+// @mixin boxcenter($w , $top ,$borderColo ,$borderRadius ){
+//     width: $w; 
+//     margin: $top auto 0;
+//     border: 1px solid $borderColor;
+//     border-radius: $borderRadius;
+//  } */
+
+
+
+//  .box-1 {
+//     @include boxcenter(200px);
+//     @include m(){
+//       width: 100%;
+//     }
+//     background-color: #eee;
+//     height: 100px;
+//    }
+   
+//    .box-2 {
+//      @include boxcenter(136px);
+//      @include m(){
+//        @include boxcenter(100%);
+//      }
+//      background-color: #f20;
+//      height: 100px;
+//    }
+   
+//    .box-3 {
+//      @include border(#f20,  50%){
+//        color:rgb(0, 110, 255);
+//        background-color: rgb(255, 84, 84);
+//      };
+//      width:100px;
+//      height: 100px;
+//      margin: 0 auto;
+//    }
+   
+// // 
+
+// .wrapper {
+//     @include layout(1200);
+//     @include m(){
+//         @include layout(full);
+//     }
+// }
+
+// // 迴圈
+// @for $i from 1 through 10 {
+//     .box-#{$i}{
+//         width: $i * 1px;
+//     }
+// }
+
+// @mixin push($num){
+//     @for $i from 1 through 100 {
+//         .push-#{$i}{
+//             position: relative;
+//             left: $i * 1px;
+//         }
+//     }
+// }
+
+// // @include push(100);
+
+// // @mixin grid($num, $s:null){
+// //     @for $i from 1 through 12 {
+// //         .col-#{$s}-#{$i}{
+// //             width: ($i / $num) * 100%;
+// //         }
+// //     }
+
+// // }
+
+// // @include grid(12);
+// // @include m(){
+// //     @include grid(12, -md);
+// // }
+
+// // .container {
+// //     max-width: ;
+// // }
+
+
+
+
+
+
+// // @mixin border($borderColor, $borderRadius){
+// //     border: 1px solid $borderColor;//#666
+// //     border-radius: $borderRadius;
+// // }
+
